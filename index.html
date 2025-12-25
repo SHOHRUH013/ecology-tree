@@ -1,135 +1,41 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ekologiya vazirligi — Daraxt ID</title>
-    <meta name="description" content="Daraxt ID raqamini kiriting va daraxt sahifasiga yo‘naltirilasiz." />
-    <link rel="stylesheet" href="style.css" />
+    <title>Yashil Makon ID</title>
+    <link rel="stylesheet" href="./style.css" />
+    <meta name="theme-color" content="#0b3d2e" />
 </head>
-
 <body>
-<main class="page">
-    <section class="card" aria-label="Daraxtni aniqlash sahifasi">
-        <div class="topbar" aria-hidden="true"></div>
+<div class="bg"></div>
 
-        <header class="header">
-            <!-- Logo: index.html bilan bitta papkada logo.png bo‘lsin -->
-            <img class="logo" src="ecology.png" alt="Ekologiya vazirligi logotipi" />
-        </header>
+<main class="wrap">
+    <header class="top">
+        <div class="brand">
+            <div class="logo">
+                <img src="ecology.png" alt="Yashil Makon Logo">
+            </div>
 
-        <div class="content">
-            <h1 class="title">Daraxt ma’lumotini topish</h1>
-            <p class="subtitle">
-                Daraxt ID raqamini kiriting. Tugmani bosing yoki Enter qiling — daraxt sahifasi yangi oynada ochiladi.
-            </p>
-
-            <form id="treeForm" class="form" novalidate>
-                <div class="field">
-                    <div class="label">ID raqamini kiriting</div>
-
-                    <input
-                            id="treeId"
-                            class="input"
-                            type="text"
-                            inputmode="numeric"
-                            autocomplete="off"
-                            maxlength="20"
-                            placeholder="Masalan: 12345"
-                            aria-describedby="errorText"
-                    />
-
-                    <div id="errorText" class="error" role="alert" aria-live="polite"></div>
-                </div>
-
-                <button id="submitBtn" class="btn" type="submit">
-                    Daraxtni aniqlash
-                </button>
-            </form>
-
-            <footer class="footer">
-                © Ekologiya vazirligi • Yo‘naltirish: Yashil makon tizimi
-            </footer>
+            <div>
+                <div class="title">Yashil Makon ID</div>
+                <div class="subtitle">ID kiriting va sahifaga o‘ting</div>
+            </div>
         </div>
+        <div class="pill">yashilmakon.eco</div>
+    </header>
+
+    <section class="card" id="app">
+        <!-- JS shu yerga render qiladi -->
     </section>
+
+    <footer class="foot">
+        <span>©</span>
+        <span id="year"></span>
+        <span>— Minimal, tez, mobilga mos.</span>
+    </footer>
 </main>
 
-<script>
-    (function () {
-        const BASE_URL = "https://yashilmakon.eco/#/tree/";
-        const form = document.getElementById("treeForm");
-        const input = document.getElementById("treeId");
-        const error = document.getElementById("errorText");
-        const btn = document.getElementById("submitBtn");
-
-        function resetUI({ keepValue = true } = {}) {
-            btn.disabled = false;
-            error.textContent = "";
-            input.classList.remove("input--bad");
-            if (!keepValue) input.value = "";
-            // Fokus (mobilada ba'zan fokus bermaydi, lekin urinamiz)
-            try { input.focus(); } catch {}
-        }
-
-        // Sahifa qaytib kelganda (Back/Forward cache) ham UI tiklansin
-        window.addEventListener("pageshow", () => {
-            resetUI({ keepValue: true });
-        });
-
-        // Faqat raqam qabul qilish (harf yozsa avtomatik olib tashlaydi)
-        input.addEventListener("input", () => {
-            const original = input.value;
-            const cleaned = original.replace(/\D+/g, "");
-            if (original !== cleaned) input.value = cleaned;
-
-            error.textContent = "";
-            input.classList.remove("input--bad");
-        });
-
-        function showError(msg) {
-            error.textContent = msg;
-            input.classList.add("input--bad");
-            try { input.focus(); } catch {}
-        }
-
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            // Har submitda qayta “tirik” holatga keltiramiz
-            btn.disabled = true;
-            error.textContent = "";
-            input.classList.remove("input--bad");
-
-            const id = input.value.trim();
-
-            if (!id) {
-                resetUI({ keepValue: true });
-                return showError("ID raqamini kiriting.");
-            }
-
-            if (!/^\d+$/.test(id)) {
-                resetUI({ keepValue: true });
-                return showError("Maydonga faqat raqamlar kiritiladi.");
-            }
-
-            const target = BASE_URL + encodeURIComponent(id);
-
-            // ✅ yangi tab ochiladi, bu sahifa joyida qoladi
-            const win = window.open(target, "_blank");
-
-            // Popup blok bo‘lsa:
-            if (!win) {
-                resetUI({ keepValue: true });
-                return showError("Brauzer popup’ni blok qildi. Iltimos, ruxsat bering va yana urinib ko‘ring.");
-            }
-
-            // Ochilgandan keyin: inputni tozalaymiz va tayyor holatga qaytaramiz
-            resetUI({ keepValue: false });
-        });
-
-        // Birinchi ochilganda ham tayyor holat
-        window.addEventListener("load", () => resetUI({ keepValue: true }));
-    })();
-</script>
+<script src="./app.js"></script>
 </body>
 </html>
