@@ -8,75 +8,59 @@
 
   if (!form || !input || !error || !btn) return;
 
-  function isTelegramInApp() {
-    const ua = (navigator.userAgent || "").toLowerCase();
-    return ua.includes("telegram") || ua.includes("tgbrowser") || ua.includes("tg");
-  }
-
-  function resetUI({ keepValue = true } = {}) {
-    btn.disabled = false;
-    error.textContent = "";
-    input.classList.remove("input--bad");
-    if (!keepValue) input.value = "";
-    try { input.focus(); } catch {}
-  }
+  const ua = (navigator.userAgent || "").toLowerCase();
+  const isTelegram = ua.includes("telegram") || ua.includes("tgbrowser");
 
   function showError(msg) {
     error.textContent = msg;
     input.classList.add("input--bad");
     try { input.focus(); } catch {}
+    btn.disabled = false;
   }
 
-  // Back/forward cache’da ham tiklansin
-  window.addEventListener("pageshow", () => resetUI({ keepValue: true }));
-  window.addEventListener("focus", () => { btn.disabled = false; });
-
-  // Faqat raqam
-  input.addEventListener("input", () => {
-    const original = input.value;
-    const cleaned = original.replace(/\D+/g, "");
-    if (original !== cleaned) input.value = cleaned;
+  function clearError() {
     error.textContent = "";
     input.classList.remove("input--bad");
+  }
+
+  // back/forward cache’dan qaytganda ham ishlasin
+  window.addEventListener("pageshow", () => { btn.disabled = false; });
+  window.addEventListener("focus", () => { btn.disabled = false; });
+
+  input.addEventListener("input", () => {
+    const cleaned = input.value.replace(/\D+/g, "");
+    if (input.value !== cleaned) input.value = cleaned;
+    clearError();
   });
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-
     btn.disabled = true;
-    error.textContent = "";
-    input.classList.remove("input--bad");
+    clearError();
 
     const id = input.value.trim();
 
-    if (!id) {
-      resetUI({ keepValue: true });
-      return showError("ID raqamini kiriting.");
-    }
-
-    if (!/^\d+$/.test(id)) {
-      resetUI({ keepValue: true });
-      return showError("Maydonga faqat raqamlar kiritiladi.");
-    }
+    if (!id) return showError("ID raqamini kiriting.");
+    if (!/^\d+$/.test(id)) return showError("Maydonga faqat raqamlar kiritiladi.");
 
     const target = BASE_URL + encodeURIComponent(id);
 
     // ✅ Telegram ichida eng barqaror: shu oynada ochish
-    if (isTelegramInApp()) {
+    if (isTelegram) {
       window.location.assign(target);
       return;
     }
 
-    // ✅ Oddiy brauzer: yangi tab, bo‘lmasa fallback
+    // ✅ Oddiy brauzer: avval yangi tab, blok bo‘lsa shu oynada
     const win = window.open(target, "_blank", "noopener,noreferrer");
     if (!win) {
       window.location.assign(target);
       return;
     }
 
-    // Yangi tab ochildi → bu sahifa qoladi, input tozalanadi
-    resetUI({ keepValue: false });
+    // yangi tab ochildi → bu sahifa qoladi
+    input.value = "";
+    btn.disabled = false;
+    try { input.focus(); } catch {}
   });
-
-  window.addEventListener("load", () => resetUI({ keepValue: true }));
 })();
