@@ -1,41 +1,60 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yashil Makon ID</title>
-    <link rel="stylesheet" href="./style.css" />
-    <meta name="theme-color" content="#0b3d2e" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daraxt ma’lumotini topish</title>
+  <meta name="description" content="Daraxt ID raqamini kiriting va daraxt sahifasiga yo‘naltirilasiz." />
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-<div class="bg"></div>
+  <main class="page">
+    <section class="card" aria-label="Daraxtni aniqlash sahifasi">
+      <div class="topbar" aria-hidden="true"></div>
 
-<main class="wrap">
-    <header class="top">
-        <div class="brand">
-            <div class="logo">
-                <img src="ecology.png" alt="Yashil Makon Logo">
-            </div>
+      <header class="header">
+        <!-- Logo shu papkada logo.png bo‘lsin -->
+        <img class="logo" src="logo.png" alt="Davlat ekologik ekspertizasi markazi" />
+      </header>
 
-            <div>
-                <div class="title">Yashil Makon ID</div>
-                <div class="subtitle">ID kiriting va sahifaga o‘ting</div>
-            </div>
-        </div>
-        <div class="pill">yashilmakon.eco</div>
-    </header>
+      <div class="content">
+        <h1 class="title">Daraxt ma’lumotini topish</h1>
+        <p class="subtitle">
+          Daraxt ID raqamini kiriting. Tugmani bosing yoki Enter qiling — daraxt sahifasi ochiladi.
+        </p>
 
-    <section class="card" id="app">
-        <!-- JS shu yerga render qiladi -->
+        <form id="treeForm" class="form" novalidate>
+          <div class="field">
+            <div class="label">ID raqamini kiriting</div>
+
+            <input
+              id="treeId"
+              class="input"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              maxlength="20"
+              placeholder="Masalan: 12345"
+              aria-describedby="errorText"
+            />
+
+            <div id="errorText" class="error" role="alert" aria-live="polite"></div>
+          </div>
+
+          <button id="submitBtn" class="btn" type="submit">
+            Daraxtni aniqlash
+          </button>
+        </form>
+
+        <footer class="footer">
+          © Ekologiya vazirligi • Yo‘naltirish: Yashil makon tizimi
+        </footer>
+      </div>
     </section>
+  </main>
 
-    <footer class="foot">
-        <span>©</span>
-        <span id="year"></span>
-        <span>— Minimal, tez, mobilga mos.</span>
-    </footer>
-</main>
-
-<script src="./app.js"></script>
+  <!-- app.js ishlatamiz (xohlamasang o‘chirib tashlaysan) -->
+  <script src="app.js" defer></script>
 </body>
 </html>
